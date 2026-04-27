@@ -1,0 +1,22 @@
+What I did:
+Installed Ubuntu on VMWare Workstation
+Fixed keyboard input issue by disabling USB
+Installed nginx
+Started and stopped nginx
+Viewed site on localhost
+Accessed logs and saw activity being logged when accessing the site
+
+What I learned:
+How to install an operating system on a virtual machine
+nginx is a web server
+Services can be started or stopped
+Logs monitor activity
+No log activity when service is down
+
+Commands used:
+sudo apt update
+sudo apt install nginx
+sudo systemctl start nginx
+sudo systemctl stop nginx
+sudo tail -f /var/log/nginx/access.log
+
