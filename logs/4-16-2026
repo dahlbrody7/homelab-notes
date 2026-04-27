@@ -1,0 +1,129 @@
+Setting up Kali Linux and Fixing Network Issue
+
+Installed Kali Linux for use in VMWare Workstation, but encountered a network issue
+
+Problem:
+Kali Linux VM had no internet connectivity
+Ping requests returned "Network unreachable" and no IPv4 address was assigned to network interface
+
+Troubleshooting:
+Checked interfaces using 'ip a'
+Saw that eth0 and eth1 were up but had no IPv4 address
+
+Solution:
+Assigned IP address:
+ip addr add 10.0.2.15/24 dev eth0
+Set default gateway:
+ip route add default via 10.0.2.2
+Configured DNS:
+nameserver 8.8.8.8 -> /etc/resolv.conf
+Implemented permanent fix by installing a DHCP client:
+sudo apt install isc-dhcp-client
+Then requested an IP:
+dhclient eth0
+Verified network connectivity by pinging 8.8.8.8
+
+What I learned:
+difference between manual network config and DHCP-based configuration
+how to assign temporary IP address
+how to configure DNS
+how to install a DHCP client to fix the issue permanently
+how to diagnose network issues using:
+ip a
+ping
+ip route
+
+Tested firewall behavior by allowing and denying port 80
+
+From the Kali machine, pinged the Ubuntu machine:
+ping 192.168.56.103
+
+Then, I curled the nginx server:
+curl http://192.168.56.103
+HTTP requests from Kali reached the nginx server and were logged
+
+Went back to Ubuntu machine and configured the firewall to deny all inbound traffic on port 80:
+sudo ufw deny 80
+
+Tried curling again on the Kali machine after, no response was received and no log entry was made
+
+What I learned:
+how open ports affect access to a system
+how firewalls block traffic before it reaches the application layer
+blocked traffic does not appear in logs
+how to test service access using curl
+how to verify cause and effect when configuring fw rules
+
+Fixed slow APT speeds on Ubuntu
+
+Problem:
+Extremely slow apt download speeds compared to kali Linux
+
+Troubleshooting:
+APT attempting IPv6 connections that were failing
+Default http mirrors causing slow connections in VM
+
+Solution:
+Forced IPv4:
+sudo nano /etc/apt/apt.conf.d/99force-ipv4
+Added:
+Acquire::ForceIPv4 "true";
+Switched repositories to HTTPS:
+sudo nano /etc/apt/sources.list.d/ubuntu.sources
+Changed http to https in source links
+Reset APT:
+sudo apt clean
+sudo rm -rf /var/lib/apt/lists*
+sudo apt update
+APT download speed was much faster after
+
+What I learned:
+APT performance heavily depends on mirror and protocol (Kali Linux uses HTTPS by default, no issues on there)
+IPv6 can cause slower speeds in VM environments
+HTTPS is more reliable than HTTP for package downloads
+How to troubleshoot slow package manager behavior
+
+Allowed port 22 on Ubuntu ufw and scanned with nmap from Kali machine
+
+What I did:
+Allowed port 22 on Ubuntu ufw
+sudo ufw allow 22
+Then, scanned the machine's ports using nmap on the Kali machine
+nmap (IP address)
+Result: saw what ports are open and closed on the Ubuntu machine
+PORT     STATE     SERVICE
+22/tcp   closed      ssh
+80/tcp   open      http
+
+
+Installed and enabled SSH on Ubuntu
+
+What I did:
+After seeing that 22's state was closed on the nmap, realized although I have it set to open on the ufw, I do not have it installed nor enabled
+Installed and enabled SSH:
+sudo apt install openssh-server
+sudo systemctl start ssh
+sudo systemctl enable ssh
+Verified it's running:
+sudo systemctl status ssh
+Status was active
+Ran nmap again from Kali machine
+Result: now that ssh was installed and enabled, port 22 showed as open on nmap
+PORT     STATE     SERVICE
+22/tcp   open      ssh
+80/tcp   open      http
+Attempted to connect from Kali using SSH
+ssh (username)@(IP address)
+Entered wrong password intentionally and verified that the failed authentication attempt appeared in Ubuntu logs
+sudo trail -f /var/log/auth.log
+
+What I learned:
+Port state depends on whether a service is actually running, not just firewall rules
+Allowing a port in ufw does not open it by itself, service must be installed and actively listening on that port
+Nmap shows real system behavior
+closed = no service listening
+open = service is running and reachable
+SSH authentication attempts are recorded in /var/log/auth.log and include the source IP and result of login attempt
+Relationship between:
+service status, port state, scan results, log visibility
+Can be used to verify system config and detect unauthorized access attempts
