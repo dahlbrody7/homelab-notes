@@ -1,2 +1,169 @@
 4/28/2026
 
+Set up pfSense and created a segmented network with LAN and DMZ
+
+Installed pfSense in VMware and assigned interfaces:
+
+WAN (NAT)
+LAN (VMnet1, 192.168.10.0/24)
+DMZ (OPT1, VMnet2, 192.168.2.0/24)
+
+Connected machines:
+Kali (LAN)
+Ubuntu (DMZ)
+Wazuh VM (LAN)
+
+Initially trying to get communication working between the machines
+
+Problem:
+Kali could not ping anything at first
+
+Troubleshooting:
+Ran:
+ip a
+Saw IP was assigned correctly
+
+Ran:
+ip route
+Noticed there was no default gateway, which means it could not reach the internet
+
+Added gateway:
+ip route add default via 192.168.10.1
+
+After that, pinging started working
+
+Then moved on to testing communication from the Ubuntu machine in the DMZ
+
+Problem:
+Ubuntu could not reach other systems or communicate as expected
+
+From Ubuntu:
+ping 192.168.2.1 (pfSense DMZ gateway)
+
+Had  no response
+
+Started troubleshooting on Ubuntu
+
+Checked IP configuration:
+ip a
+IP was assigned correctly (192.168.2.x)
+
+Checked routing:
+ip route
+Verified default route existed
+
+Still no communication
+
+Began trying to fix network configuration on Ubuntu
+
+Looked into network config files under /etc/netplan and /etc/network
+
+Made changes and reapplied configs:
+sudo netplan apply
+
+Also restarted networking multiple times
+
+After changes, still no improvement
+
+At this point confirmed:
+IP was correct
+routing was correct
+interface was up
+
+So issue likely not on Ubuntu side
+
+Shifted focus to pfSense firewall
+
+Checked firewall rules again
+
+Realized my "allow dmz outbound" rule source was set to OPT1 address instead of OPT1 subnet
+
+Tried pinging again from Ubuntu machine after implementing FW change
+Worked!
+
+Also configured "block dmz to lan" and "allow dmz ping firewall" (in case ICMP was blocking pings)
+see dmz-firewall-rules.png in screenshots
+
+Confirmed DMZ was blocked from lan:
+From Ubuntu:
+ping 192.168.10.x
+No response, rule works
+
+Ran into another issue
+
+Problem:
+Kali could not ping pfSense LAN gateway anymore (192.168.10.1)
+100% packet loss when trying to ping
+
+Troubleshooting:
+
+Checked IP:
+ip a
+IP still correct
+
+Checked route:
+ip route
+Gateway still set
+
+Tried ping again (still failing)
+
+Checked ARP:
+ip neigh
+Saw:
+192.168.10.1 REACHABLE
+
+So Layer 2 is working
+
+Tried disabling firewall on pfSense:
+pfctl -d
+
+No change
+
+Conclusion:
+Not a firewall issue
+
+Restarted pfSense
+
+After reboot:
+ping 192.168.10.1 
+Worked again
+
+Noticed a pattern:
+pfSense stops working when starting or rebooting a VM on the network
+
+Workaround/Temporary fix:
+Restart pfSense when this happens
+Will look into permanent fix soon
+
+Also started setting static IPs to avoid DHCP issues
+
+Began setting up Wazuh
+
+Created new Ubuntu VM on LAN
+
+Installed Wazuh using installer script
+
+Got warning about UFW blocking ports
+
+Disabled UFW:
+sudo ufw disable
+
+Finished install
+
+Verified:
+(Wazuh dashboard accessible at https://192.168.10.x)
+
+What I learned:
+Default gateway is required for communication outside local network
+Difference between having an IP and having a route
+ARP showing REACHABLE means Layer 2 works but does not guarantee communication
+Firewall rules in pfSense depend on the interface where traffic enters
+Using subnet vs interface address matters when creating rules
+How to test network behavior step by step:
+ip a
+ip route
+ping
+ip neigh
+pfSense can stop responding when new VMs connect and may require a reboot
+Static IPs help avoid DHCP issues and inconsistent behavior in a lab environment
+Basic understanding of how SIEM (Wazuh) fits into a network
