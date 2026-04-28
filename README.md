@@ -5,7 +5,14 @@ A personal IT homelab built using VMware Workstation on a custom built PC. Built
 ## Environment
 - Host: Custom built desktop (Ryzen 7 7800X3D, 32GB RAM)
 - Hypervisor: VMware Workstation
-- VMs: Ubuntu Desktop, Kali Linux
+- Diagram:
+LAN (192.168.10.x)
+  Kali      Wazuh
+      \      /
+       pfSense
+          |
+        DMZ (192.168.2.x)
+      Ubuntu
 
 ## What I've Done So Far
 - Deployed and configured nginx web server
@@ -13,10 +20,12 @@ A personal IT homelab built using VMware Workstation on a custom built PC. Built
 - Set up SSH and tested authentication logging
 - Simulated basic incident response by terminating an active SSH session
 - Diagnosed and resolved network issues on Ubuntu and Kali Linux VMs
+- Built a virtualized network with pfSense, with LAN + DMZ segmentation
+- Troubleshot connectivity problems stemming from routing, DHCP, firewall, and system issues
+- Deployed Wazuh SIEM on a new Ubuntu VM and verified installation
 
 ## In Progress
-- pfSense DMZ configuration
-- Wazuh SIEM deployment
+Connecting Ubuntu server to Wazuh and testing that logs and alerts work properly
 
 ## Certifications
 - CompTIA Network+ (N10-009)
