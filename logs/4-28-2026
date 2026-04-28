@@ -168,3 +168,5 @@ ip neigh
 pfSense can stop responding when new VMs connect and may require a reboot
 Static IPs help avoid DHCP issues and inconsistent behavior in a lab environment
 Basic understanding of how SIEM (Wazuh) fits into a network
+
+Was really cool to see so much of what I learned in Network+ in action
