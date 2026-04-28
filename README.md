@@ -6,7 +6,8 @@ A personal IT homelab built using VMware Workstation on a custom built PC. Built
 - Host: Custom built desktop (Ryzen 7 7800X3D, 32GB RAM)
 - Hypervisor: VMware Workstation
 - Diagram:
-LAN (192.168.10.x)
+
+  LAN (192.168.10.x)
   Kali      Wazuh
       \      /
        pfSense
