@@ -145,7 +145,7 @@ Installed Wazuh using installer script
 
 Got warning about UFW blocking ports
 
-Disabled UFW:
+Disabled UFW temporarily:
 sudo ufw disable
 
 Finished install
@@ -154,10 +154,11 @@ Verified:
 (Wazuh dashboard accessible at https://192.168.10.x)
 
 What I learned:
+How to do basic network segmenting
 Default gateway is required for communication outside local network
 Difference between having an IP and having a route
 ARP showing REACHABLE means Layer 2 works but does not guarantee communication
-Firewall rules in pfSense depend on the interface where traffic enters
+Basic router firewall configuration
 Using subnet vs interface address matters when creating rules
 How to test network behavior step by step:
 ip a
