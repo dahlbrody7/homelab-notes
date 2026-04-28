@@ -1,6 +1,6 @@
 # Home Lab
 
-A personal IT homelab built using VMware Workstation on a custom built PC. Built to get comfortable troubleshooting, and to learn networking, system administration, security and IT infrastructure through hands-on experience.
+A personal IT homelab built using VMware Workstation on a custom built PC. Built to get comfortable troubleshooting and to learn networking, system administration, security, and IT infrastructure through hands-on experience.
 
 ## Environment
 - Host: Custom built desktop (Ryzen 7 7800X3D, 32GB RAM)
