@@ -61,7 +61,7 @@ What I learned:
 -The order of firewall rules matters
 -In a segmented network, firewall rules have to allow only the required traffic while keeping the DMZ isolated
 -nc -vz is useful for testing if a specific TCP port is reachable through the firewall
--systemctl status is not very the best option for seeing root causes of agent errors, Wazuh's own ossec.log shows more specifics
+-systemctl status is not the best option for seeing root causes of agent errors, Wazuh's own ossec.log shows more specifics
 -Wazuh alerts are based on logs it receives, not just any network traffic
 -Nmap scans do not create SIEM alerts by default
 -SSH brute-force attempts generate authentication logs, which Wazuh detects and turns into alerts
