@@ -1,4 +1,4 @@
-# Home Lab
+# IT Homelab
 
 A personal IT homelab built using VMware Workstation on a custom built PC. Built to get comfortable troubleshooting and to learn networking, system administration, security, and IT infrastructure through hands-on experience. Includes notes from each lab session that document troubleshooting along with screenshots.
 
