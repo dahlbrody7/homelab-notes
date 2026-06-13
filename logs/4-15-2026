@@ -1,22 +1,28 @@
+4/15/2026
+
+Installed Ubuntu and nginx on VMware Workstation
+
 What I did:
-Installed Ubuntu on VMWare Workstation
+-Installed Ubuntu on VMware Workstation:
 Fixed keyboard input issue by disabling USB
-Installed nginx
-Started and stopped nginx
-Viewed site on localhost
-Accessed logs and saw activity being logged when accessing the site
 
-What I learned:
-How to install an operating system on a virtual machine
-nginx is a web server
-Services can be started or stopped
-Logs monitor activity
-No log activity when service is down
-
-Commands used:
+-Installed nginx:
 sudo apt update
 sudo apt install nginx
+
+-Started and stopped nginx:
 sudo systemctl start nginx
 sudo systemctl stop nginx
-sudo tail -f /var/log/nginx/access.log
 
+-Viewed site on localhost
+
+-Accessed logs and observed activity being logged when accessing the site:
+sudo tail -f /var/log/nginx/access.log
+Noticed no log activity when service is down
+
+What I learned:
+-How to install an operating system on a virtual machine
+-nginx is a web server
+-Services can be started and stopped
+-Logs monitor activity
+-No log activity is generated when a service is down
